@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banery Promocyjne</title>
+    <style>
+        /* Prosty styl CSS dla banerów */
+        .banner {
+            width: 300px;
+            height: 250px;
+            margin: 20px;
+            background-color: #ccc;
+            display: inline-block;
+            position: relative;
+            text-align: center;
+            line-height: 250px;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .banner-grid {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .banner-grid .banner {
+            width: 23%;
+            margin: 1%;
+        }
+
+        .banner p {
+            margin: 0;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Pojedynczy baner -->
+    <div id="single-banner" class="banner">
+        <p>Baner Pojedynczy</p>
+    </div>
+
+    <!-- Banery w siatce -->
+    <div class="banner-grid">
+        <div class="banner">
+            <p>Baner 1</p>
+        </div>
+        <div class="banner">
+            <p>Baner 2</p>
+        </div>
+        <div class="banner">
+            <p>Baner 3</p>
+        </div>
+        <div class="banner">
+            <p>Baner 4</p>
+        </div>
+    </div>
+
+    <!-- Skrypt do obsługi eventów i wysyłania danych do dataLayer -->
+    <script>
+        // Funkcja do wysyłania zdarzenia wyświetlenia banera (view_promotion)
+        function sendViewPromotionEvent(promotionName, promotionId, locationId, creativeName, creativeSlot) {
+            dataLayer.push({ ecommerce: null }); // Czyszczenie poprzednich danych ecommerce
+            dataLayer.push({
+                event: "view_promotion",
+                ecommerce: {
+                    creative_name: creativeName, // Nazwa pliku kreatywy
+                    creative_slot: creativeSlot, // Typ banera + pozycja w siatce
+                    promotion_id: promotionId, // Identyfikator promocji
+                    promotion_name: promotionName, // Nazwa promocji
+                    location_id: locationId // Lokalizacja banera na stronie
+                }
+            });
+        }
+
+        // Funkcja do wysyłania zdarzenia kliknięcia w baner (select_promotion)
+        function sendSelectPromotionEvent(promotionName, promotionId, locationId, creativeName, creativeSlot) {
+            dataLayer.push({ ecommerce: null }); // Czyszczenie poprzednich danych ecommerce
+            dataLayer.push({
+                event: "select_promotion",
+                ecommerce: {
+                    creative_name: creativeName, // Nazwa pliku kreatywy
+                    creative_slot: creativeSlot, // Typ banera + pozycja w siatce
+                    promotion_id: promotionId, // Identyfikator promocji
+                    promotion_name: promotionName, // Nazwa promocji
+                    location_id: locationId // Lokalizacja banera na stronie
+                }
+            });
+        }
+
+        // Wyzwalanie eventu view_promotion przy załadowaniu strony (banery są widoczne)
+        window.addEventListener('load', function() {
+            // Pojedynczy baner
+            sendViewPromotionEvent("Winter Carousel Single", "car_1_winter", "Welcome", "car.jpg", "car_1");
+
+            // Banery w siatce
+            const gridBanners = document.querySelectorAll(".banner-grid .banner");
+            gridBanners.forEach((banner, index) => {
+                sendViewPromotionEvent("Winter Carousel Grid", `car_${index + 1}_winter`, "Grid Location", "car.jpg", `car_${index + 1}`);
+            });
+        });
+
+        // Kliknięcie w pojedynczy baner
+        document.getElementById("single-banner").addEventListener("click", function() {
+            sendSelectPromotionEvent("Winter Carousel Single", "car_1_winter", "Welcome", "car.jpg", "car_1");
+        });
+
+        // Kliknięcie w banery w siatce
+        const gridBanners = document.querySelectorAll(".banner-grid .banner");
+        gridBanners.forEach((banner, index) => {
+            banner.addEventListener("click", function() {
+                sendSelectPromotionEvent("Winter Carousel Grid", `car_${index + 1}_winter`, "Grid Location", "car.jpg", `car_${index + 1}`);
+            });
+        });
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PNSTLRQG');</script>
+    <!-- End Google Tag Manager -->
+
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PNSTLRQG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+</body>
+</html>
